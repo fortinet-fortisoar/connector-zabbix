@@ -1,0 +1,874 @@
+{
+  "name": "zabbix",
+  "version": "1.0.0",
+  "label": "Zabbix",
+  "description": "Zabbix is an open-source enterprise-level monitoring platform that provides real-time visibility into the performance and availability of IT infrastructure — including servers, networks, applications, services, and cloud environments.",
+  "publisher": "Fortinet",
+  "cs_approved": true,
+  "cs_compatible": true,
+  "icon_small_name": "small.png",
+  "icon_large_name": "large.png",
+  "category": "Monitoring",
+  "help_online": "",
+  "ingestion_supported": true,
+  "ingestion_modes": [
+    "scheduled"
+  ],
+  "configuration": {
+    "fields": [
+      {
+        "title": "Server URL",
+        "name": "server_url",
+        "type": "text",
+        "description": "Provide the host URL of the zabbix server to connect and perform automated operations.",
+        "tooltip": "Provide the host URL of the zabbix server to connect and perform automated operations.",
+        "required": true,
+        "visible": true,
+        "editable": true
+      },
+      {
+        "title": "API Key",
+        "name": "api_key",
+        "type": "password",
+        "description": "Provide the API key of the zabbix server used to authenticate and and perform automated operations.",
+        "tooltip": "Provide the API key of the zabbix server used to authenticate and and perform automated operations.",
+        "visible": true,
+        "editable": true,
+        "required": true
+      },
+      {
+        "title": "Verify SSL",
+        "name": "verify_ssl",
+        "type": "checkbox",
+        "description": "Specifies whether the SSL certificate for the server is to be verified. By default, this option is selected, i.e., set to true.",
+        "tooltip": "Specifies whether the SSL certificate for for the server is to be verified or not. By default, this option is set as True.",
+        "required": false,
+        "editable": true,
+        "visible": true,
+        "value": true
+      }
+    ]
+  },
+  "operations": [
+    {
+      "title": "Get Alerts",
+      "operation": "get_alerts",
+      "annotation": "get_alerts",
+      "category": "investigation",
+      "description": "Retrieves alert records from the Zabbix monitoring system including details such as recipient, media type, status, and message content.",
+      "output_schema": {
+        "jsonrpc": "",
+        "result": [
+          {
+            "alertid": "",
+            "actionid": "",
+            "eventid": "",
+            "userid": "",
+            "clock": "",
+            "mediatypeid": "",
+            "sendto": "",
+            "subject": "",
+            "message": "",
+            "status": "",
+            "retries": "",
+            "error": "",
+            "esc_step": "",
+            "alerttype": "",
+            "p_eventid": "",
+            "acknowledgeid": ""
+          }
+        ],
+        "id": ""
+      },
+      "parameters": [
+        {
+          "title": "Start Date",
+          "name": "start_date",
+          "type": "datetime",
+          "description": "Specify the start date to retrieve alerts that were generated after the given time.",
+          "tooltip": "Specify the start date to retrieve alerts that were generated after the given time.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "End Date",
+          "name": "end_date",
+          "type": "datetime",
+          "description": "Specify the end date to retrieve alerts that were generated before the given time.",
+          "tooltip": "Specify the end date to retrieve alerts that were generated before the given time.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Search Pattern",
+          "name": "search",
+          "type": "json",
+          "description": "Return results that match the given pattern (case-insensitive). Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search. {\"subject\": \"*CPU*\",\"message\": \"*high*\"}",
+          "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search. ex. {\"subject\": \"*CPU*\",\"message\": \"*high*\"}",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "placeholder": "{\"subject\": \"*CPU*\",\"message\": \"*high*\"}"
+        },
+        {
+          "title": "Search By Any",
+          "name": "search_any",
+          "type": "checkbox",
+          "description": "If set to true, return results that match any of the criteria given in the filter or search parameter instead of all of them. Default: false",
+          "tooltip": "If set to true, return results that match any of the criteria given in the filter or search parameter instead of all of them. Default: false",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Search Wildcards Enabled",
+          "name": "search_wildcards_enabled",
+          "type": "checkbox",
+          "description": "If set to true, enables the use of \"*\" as a wildcard character in the search parameter.\n",
+          "tooltip": "If set to true, enables the use of \"*\" as a wildcard character in the search parameter.\n",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Filter",
+          "name": "filter",
+          "type": "json",
+          "description": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are either a single value or an array of values to match against. ex. {\"status\": 0 }",
+          "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are either a single value or an array of values to match against. ex. {\"status\": 0 }",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "placeholder": "{\"status\": 0 }"
+        },
+        {
+          "title": "Alert IDs",
+          "name": "alert_ids",
+          "type": "text",
+          "description": "Specifying this parameter returns only alerts with the given IDs.",
+          "tooltip": "Specifying this parameter returns only alerts with the given IDs.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Action IDs",
+          "name": "action_ids",
+          "type": "text",
+          "description": "Specifying this parameter returns only alerts generated by the given actions.",
+          "tooltip": "Specifying this parameter returns only alerts generated by the given actions.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Event IDs",
+          "name": "event_ids",
+          "type": "text",
+          "description": "Specifying this parameter returns only alerts generated by the given events.",
+          "tooltip": "Specifying this parameter returns only alerts generated by the given events.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Group IDs",
+          "name": "group_ids",
+          "type": "text",
+          "description": "Specifying this parameter returns only alerts generated by objects from the given host groups.",
+          "tooltip": "Specifying this parameter returns only alerts generated by objects from the given host groups.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Host IDs",
+          "name": "host_ids",
+          "type": "text",
+          "description": "Specifying this parameter returns only alerts generated by objects from the given hosts.",
+          "tooltip": "Specifying this parameter returns alerts generated by objects from the given hosts.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "User IDs",
+          "name": "user_ids",
+          "type": "text",
+          "description": "Specifying this parameter returns only message alerts that were sent to the given users.",
+          "tooltip": "Specifying this parameter  only message alerts that were sent to the given users.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Object IDs",
+          "name": "object_ids",
+          "type": "text",
+          "description": "Specifying this parameter returns only alerts generated by the given objects",
+          "tooltip": "Specifying this parameter only alerts generated by the given objects",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Event Object Type",
+          "name": "event_object_type",
+          "type": "select",
+          "description": "Specifying this parameter returns alerts generated by events related to objects of the given type.",
+          "tooltip": "Specifying this parameter returns alerts generated by events related to objects of the given type.",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "options": [
+            "Trigger",
+            "Discovered Host",
+            "Discovered Service",
+            "Auto-Registered Host",
+            "Item",
+            "LLD Rule",
+            "Service"
+          ]
+        },
+        {
+          "title": "Event Source",
+          "name": "event_source",
+          "type": "select",
+          "description": "Specifying this parameter returns alerts generated by events related to objects of the given type.",
+          "tooltip": "Specifying this parameter returns alerts generated by events related to objects of the given type.",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "options": [
+            "Event Created by a Trigger",
+            "Event Created by a Discovery Rule",
+            "Event Created by Active Agent Auto Registration",
+            "Internal Event",
+            "Event Created on Service Status Update"
+          ]
+        },
+        {
+          "title": "Sort Fields",
+          "name": "sort_field",
+          "type": "multiselect",
+          "description": "Sort the result by the given properties. Possible values are: alertid, clock, eventid, mediatypeid, sendto and status.",
+          "tooltip": "Sort the result by the given properties. Possible values are: alertid, clock, eventid, mediatypeid, sendto and status.",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "options": [
+            "alertid",
+            "clock",
+            "eventid",
+            "mediatypeid",
+            "sendto",
+            "status"
+          ]
+        },
+        {
+          "title": "Sort Order",
+          "name": "sortorder",
+          "type": "select",
+          "description": "Order of sorting. If an array is passed, each value will be matched to the corresponding property given in the sortfield parameter.\n",
+          "tooltip": "Order of sorting. If an array is passed, each value will be matched to the corresponding property given in the sortfield parameter.\n",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "options": [
+            "ASC",
+            "DESC"
+          ]
+        },
+        {
+          "title": "Limit",
+          "name": "limit",
+          "type": "integer",
+          "description": "Limit the number of records to be returned in the action response.",
+          "tooltip": "Limit the number of records to be returned in the action response.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Additional Fields",
+          "name": "additional_fields",
+          "type": "json",
+          "description": "Provide additional parameters in JSON format to filter the alerts based on the provided input.",
+          "tooltip": "Provide additional parameters in JSON format to filter the alerts based on the provided input.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "title": "Get Events",
+      "operation": "get_events",
+      "annotation": "get_events",
+      "category": "investigation",
+      "description": "Retrieves event data from the Zabbix server based on specified filters such as event type, severity, source, and time range.",
+      "output_schema": {
+        "jsonrpc": "2.0",
+        "result": [
+          {
+            "eventid": "",
+            "source": "",
+            "object": "",
+            "objectid": "",
+            "clock": "",
+            "value": "",
+            "acknowledged": "",
+            "ns": "",
+            "name": "",
+            "severity": "",
+            "r_eventid": "",
+            "c_eventid": "",
+            "correlationid": "",
+            "userid": "",
+            "opdata": "",
+            "acknowledges": [
+              {
+                "acknowledgeid": "",
+                "userid": "",
+                "eventid": "",
+                "clock": "",
+                "message": "",
+                "action": "",
+                "old_severity": "",
+                "new_severity": "",
+                "alias": "",
+                "name": "",
+                "surname": ""
+              }
+            ],
+            "suppression_data": [
+              {
+                "maintenanceid": "",
+                "suppress_until": ""
+              }
+            ],
+            "suppressed": "",
+            "tags": [
+              {
+                "tag": "",
+                "value": ""
+              },
+              {
+                "tag": "",
+                "value": ""
+              }
+            ]
+          }
+        ],
+        "id": ""
+      },
+      "parameters": [
+        {
+          "title": "Start Date",
+          "name": "start_date",
+          "type": "datetime",
+          "description": "Specify the start date to retrieve only events that were created at or after the given time.",
+          "tooltip": "Specify the start date to retrieve only events that were created at or after the given time.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "End Date",
+          "name": "end_date",
+          "type": "datetime",
+          "description": "Specify the end date to retrieve only events that have been created before or at the given time.",
+          "tooltip": "Specify the end date to retrieve only events that have been created before or at the given time.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Search Pattern",
+          "name": "search",
+          "type": "json",
+          "description": "Return results that match the given pattern (case-insensitive). Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search. ex. {\"name\": \"CPU\"}",
+          "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search. ex. {\"name\": \"CPU\"}",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Filter",
+          "name": "filter",
+          "type": "json",
+          "description": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are either a single value or an array of values to match against. {\"value\": 1,\"acknowledged\": 0}",
+          "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are either a single value or an array of values to match against. {\"value\": 1,\"acknowledged\": 0}",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Event IDs",
+          "name": "event_ids",
+          "type": "text",
+          "description": "Provide a CSV list of event IDs to return only the events with the specified IDs.",
+          "tooltip": "Provide a CSV list of event IDs to return only the events with the specified IDs.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Group IDs",
+          "name": "group_ids",
+          "type": "text",
+          "description": "Provide a CSV list of host group IDs to return only the events with the specified IDs.",
+          "tooltip": "Provide a CSV list of host group IDs to return only the events with the specified IDs.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Host IDs",
+          "name": "host_ids",
+          "type": "text",
+          "description": "Provide a CSV list of host IDs to return only events created by objects that belong to the given hosts.",
+          "tooltip": "Provide a CSV list of host IDs to return only events created by objects that belong to the given hosts.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Object IDs",
+          "name": "object_ids",
+          "type": "text",
+          "description": "Provide a CSV list of object IDs to return only events created by the given objects.",
+          "tooltip": "Provide a CSV list of object IDs to return only events created by the given objects.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Event Object Type",
+          "name": "event_object_type",
+          "type": "select",
+          "description": "Specifying this parameter returns alerts generated by events related to objects of the given type.",
+          "tooltip": "Specifying this parameter returns alerts generated by events related to objects of the given type.",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "options": [
+            "Trigger",
+            "Discovered Host",
+            "Discovered Service",
+            "Auto-Registered Host",
+            "Item",
+            "LLD Rule"
+          ]
+        },
+        {
+          "title": "Event Source",
+          "name": "source",
+          "type": "select",
+          "description": "Specifying this parameter returns events with the given type.",
+          "tooltip": "Specifying this parameter returns events with the given type.",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "options": [
+            "Event Created by a Trigger",
+            "Event Created by a Discovery Rule",
+            "Event Created by Active Agent Auto Registration",
+            "Internal Event"
+          ]
+        },
+        {
+          "title": "Acknowledged",
+          "name": "acknowledged",
+          "type": "checkbox",
+          "description": "If set to true return only acknowledged events.",
+          "tooltip": "If set to true return only acknowledged events.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Suppressed",
+          "name": "suppressed",
+          "type": "checkbox",
+          "description": "If set to true - return only suppressed events; false - return events in the normal state.",
+          "tooltip": "If set to true - return only suppressed events; false - return events in the normal state.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Severities",
+          "name": "severities",
+          "type": "text",
+          "description": "Return only events with given event severities. Applies only if object is trigger.",
+          "tooltip": "Return only events with given event severities. Applies only if object is trigger.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Event IDs From",
+          "name": "event_id_from",
+          "type": "text",
+          "description": "Return only events with IDs greater or equal to the given ID.",
+          "tooltip": "Return only events with IDs greater or equal to the given ID.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Event IDs Till",
+          "name": "event_id_till",
+          "type": "text",
+          "description": "Return only events with IDs less or equal to the given ID.",
+          "tooltip": "Return only events with IDs less or equal to the given ID.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Sort Fields",
+          "name": "sort_field",
+          "type": "multiselect",
+          "description": "Sort the result by the given properties. Possible values are: eventid, objectid and clock.",
+          "tooltip": "Sort the result by the given properties. Possible values are: eventid, objectid and clock.",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "options": [
+            "alertid",
+            "clock",
+            "eventid",
+            "mediatypeid",
+            "sendto",
+            "status"
+          ]
+        },
+        {
+          "title": "Sort Order",
+          "name": "sortorder",
+          "type": "select",
+          "description": "Order of sorting. If an array is passed, each value will be matched to the corresponding property given in the sortfield parameter.\n",
+          "tooltip": "Order of sorting. If an array is passed, each value will be matched to the corresponding property given in the sortfield parameter.\n",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "options": [
+            "ASC",
+            "DESC"
+          ]
+        },
+        {
+          "title": "Limit",
+          "name": "limit",
+          "type": "integer",
+          "description": "Limit the number of records to be returned in the action response.",
+          "tooltip": "Limit the number of records to be returned in the action response.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Additional Fields",
+          "name": "additional_fields",
+          "type": "json",
+          "description": "Provide additional parameters in JSON format to filter the events based on the provided input.",
+          "tooltip": "Provide additional parameters in JSON format to filter the events based on the provided input.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "title": "Get Problems",
+      "operation": "get_problems",
+      "annotation": "get_problems",
+      "category": "investigation",
+      "description": "Retrieves active problem records from the Zabbix server, representing currently unresolved issues.",
+      "output_schema": [
+        {
+          "id": "",
+          "uid": "",
+          "orgId": "",
+          "name": "",
+          "type": "",
+          "typeName": "",
+          "typeLogoUrl": "",
+          "access": "",
+          "url": "",
+          "user": "",
+          "database": "",
+          "basicAuth": "",
+          "isDefault": "",
+          "jsonData": {},
+          "readOnly": ""
+        }
+      ],
+      "parameters": [
+        {
+          "title": "Start Date",
+          "name": "start_date",
+          "type": "datetime",
+          "description": "Specify the start date to retrieve only problems that have been created after or at the given time.",
+          "tooltip": "Specify the start date to retrieve only problems that have been created after or at the given time.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "End Date",
+          "name": "end_date",
+          "type": "datetime",
+          "description": "Specify the end date to retrieve only problems that have been created before or at the given time.",
+          "tooltip": "Specify the end date to retrieve only problems that have been created before or at the given time.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Search Pattern",
+          "name": "search",
+          "type": "json",
+          "description": "Return results that match the given pattern (case-insensitive). Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search.",
+          "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Filter",
+          "name": "filter",
+          "type": "json",
+          "description": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are either a single value or an array of values to match against.",
+          "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are either a single value or an array of values to match against.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Event IDs",
+          "name": "event_ids",
+          "type": "text",
+          "description": "Provide a CSV list of event IDs to return only problems with the given IDs.",
+          "tooltip": "Provide a CSV list of event IDs to return only problems with the given IDs.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Group IDs",
+          "name": "group_ids",
+          "type": "text",
+          "description": "Provide a CSV list of host group IDs to return only problems created by objects that belong to the given host groups.",
+          "tooltip": "Provide a CSV list of host group IDs to return only problems created by objects that belong to the given host groups.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Host IDs",
+          "name": "host_ids",
+          "type": "text",
+          "description": "Provide a CSV list of host IDs to return only problems created by objects that belong to the given hosts.",
+          "tooltip": "Provide a CSV list of host IDs to return only problems created by objects that belong to the given hosts.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Object IDs",
+          "name": "object_ids",
+          "type": "text",
+          "description": "Provide a CSV list of object IDs to return only problems created by the given objects.",
+          "tooltip": "Provide a CSV list of object IDs to only problems created by the given objects.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Application IDs",
+          "name": "application_ids",
+          "type": "text",
+          "description": "Provide a CSV list of application IDs to return only problems created by objects that belong to the given applications. Applies only if object is trigger or item.",
+          "tooltip": "Provide a CSV list of application IDs to return only problems created by objects that belong to the given applications. Applies only if object is trigger or item.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Event Object Type",
+          "name": "event_object_type",
+          "type": "select",
+          "description": "Specifying this parameter returns alerts generated by events related to objects of the given type.",
+          "tooltip": "Specifying this parameter returns alerts generated by events related to objects of the given type.",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "options": [
+            "Trigger",
+            "Discovered Host",
+            "Discovered Service",
+            "Auto-Registered Host",
+            "Item",
+            "LLD Rule"
+          ]
+        },
+        {
+          "title": "Event Source",
+          "name": "source",
+          "type": "select",
+          "description": "Specifying this parameter returns events with the given type.",
+          "tooltip": "Specifying this parameter returns events with the given type.",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "options": [
+            "Event Created by a Trigger",
+            "Internal Event",
+            "Event Created on Service Status Update"
+          ]
+        },
+        {
+          "title": "Acknowledged",
+          "name": "acknowledged",
+          "type": "checkbox",
+          "description": "If set to true - return acknowledged problems only; false - unacknowledged only.",
+          "tooltip": "If set to true - return acknowledged problems only; false - unacknowledged only.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Suppressed",
+          "name": "suppressed",
+          "type": "checkbox",
+          "description": "If set to true - return only suppressed problems; false - return problems in the normal state.",
+          "tooltip": "If set to true - return only suppressed problems; false - return problems in the normal state.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Severities",
+          "name": "severities",
+          "type": "text",
+          "description": "Return only problems with given event severities. Applies only if object is trigger.",
+          "tooltip": "Return only problems with given event severities. Applies only if object is trigger.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Event IDs From",
+          "name": "event_id_from",
+          "type": "text",
+          "description": "Return only problems with IDs greater or equal to the given ID.",
+          "tooltip": "Return only problems with IDs greater or equal to the given ID.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Event IDs Till",
+          "name": "event_id_till",
+          "type": "text",
+          "description": "Return only problems with IDs less or equal to the given ID.",
+          "tooltip": "Return only problems with IDs less or equal to the given ID.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Sort Fields",
+          "name": "sort_field",
+          "type": "select",
+          "description": "Sort the result by the given properties. Possible values are: eventid.",
+          "tooltip": "Sort the result by the given properties. Possible values are: eventid.",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "options": [
+            "eventid"
+          ]
+        },
+        {
+          "title": "Sort Order",
+          "name": "sortorder",
+          "type": "select",
+          "description": "Order of sorting. If an array is passed, each value will be matched to the corresponding property given in the sortfield parameter.\n",
+          "tooltip": "Order of sorting. If an array is passed, each value will be matched to the corresponding property given in the sortfield parameter.\n",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "options": [
+            "ASC",
+            "DESC"
+          ]
+        },
+        {
+          "title": "Limit",
+          "name": "limit",
+          "type": "integer",
+          "description": "Limit the number of records to be returned in the action response.",
+          "tooltip": "Limit the number of records to be returned in the action response.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Additional Fields",
+          "name": "additional_fields",
+          "type": "json",
+          "description": "Provide additional parameters in JSON format to filter the problems based on the provided input.",
+          "tooltip": "Provide additional parameters in JSON format to filter the problems based on the provided input.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "operation": "execute_generic_rest_api_call",
+      "title": "Execute Generic JSON RPC Request",
+      "annotation": "execute_generic_rest_api_call",
+      "description": "Execute any Grafana REST API using the specified API method, endpoint, and payload as input parameters and retrieves results.",
+      "category": "investigation",
+      "handler_method": true,
+      "visible": true,
+      "enabled": true,
+      "parameters": [
+        {
+          "title": "Request Body",
+          "type": "json",
+          "name": "request_body",
+          "description": "Specify the JSON-RPC request body to execute and retrieve the response. Note: Do not include the auth key and value in the request body, as it is internally handled by the code. for more info please refer this https://www.zabbix.com/documentation/5.0/en/manual/api/reference/host/get link",
+          "tooltip": "Specify the JSON-RPC request body to execute and retrieve the response. Note: Do not include the auth key and value in the request body, as it is internally handled by the code. for more info please refer this https://www.zabbix.com/documentation/5.0/en/manual/api/reference/host/get link",
+          "required": true,
+          "visible": true,
+          "editable": true,
+          "value": {
+            "jsonrpc": "2.0",
+            "method": "host.get",
+            "params": {
+              "filter": {
+                "host": [
+                  "Zabbix server",
+                  "Linux server"
+                ]
+              }
+            },
+            "id": 1
+          }
+        }
+      ],
+      "output_schema": {}
+    }
+  ]
+}
