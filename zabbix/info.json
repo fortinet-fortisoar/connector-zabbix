@@ -511,7 +511,7 @@
           "editable": true
         },
         {
-          "title": "Event IDs From",
+          "title": "Start Event ID",
           "name": "event_id_from",
           "type": "text",
           "description": "Return only events with IDs greater or equal to the given ID.",
@@ -521,7 +521,7 @@
           "editable": true
         },
         {
-          "title": "Event IDs Till",
+          "title": "End Event ID",
           "name": "event_id_till",
           "type": "text",
           "description": "Return only events with IDs less or equal to the given ID.",
@@ -765,7 +765,7 @@
           "editable": true
         },
         {
-          "title": "Event IDs From",
+          "title": "Start Event ID",
           "name": "event_id_from",
           "type": "text",
           "description": "Return only problems with IDs greater or equal to the given ID.",
@@ -775,7 +775,7 @@
           "editable": true
         },
         {
-          "title": "Event IDs Till",
+          "title": "End Event ID",
           "name": "event_id_till",
           "type": "text",
           "description": "Return only problems with IDs less or equal to the given ID.",

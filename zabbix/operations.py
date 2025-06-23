@@ -11,7 +11,7 @@ from datetime import datetime
 import requests
 from connectors.core.connector import get_logger, ConnectorError
 
-from .constants import EVENT_OBJECT_TYPE_MAP, EVENT_SOURCE_MAP
+from .constants import EVENT_OBJECT_TYPE_MAP, EVENT_SOURCE_MAP, ERROR_MSG
 
 logger = get_logger('zabbix')
 
@@ -28,16 +28,7 @@ class Zabbix(object):
             'Content-Type': 'application/json'
         }
         self.endpoint = 'api_jsonrpc.php'
-        self.error_msg = {
-            400: 'Bad/Invalid Request',
-            401: 'Unauthorized: Invalid credentials or token provided failed to authorize',
-            403: 'Forbidden, source data source is read-only',
-            404: 'Not found, either source or target data source could not be found',
-            500: 'Internal Server Error',
-            503: 'Service Unavailable',
-            'time_out': 'The request timed out while trying to connect to the remote server',
-            'ssl_error': 'SSL certificate validation failed'
-        }
+
 
     def make_api_call(self, method='post', payload=None, params=None):
         try:
@@ -55,7 +46,7 @@ class Zabbix(object):
                 else:
                     raise ConnectorError(json_resp)
             else:
-                logger.error(f'{self.error_msg.get(response.status_code)}: {response.text}')
+                logger.error(f'{ERROR_MSG.get(response.status_code)}: {response.text}')
                 raise ConnectorError({'status': 'Failure', 'status_code': str(response.status_code),
                 'response': '{}: {}'.format(self.error_msg.get(response.status_code), response.text)})
         except requests.exceptions.SSLError as err:
