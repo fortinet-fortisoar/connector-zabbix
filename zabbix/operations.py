@@ -42,12 +42,11 @@ class Zabbix(object):
     def make_api_call(self, method='post', payload=None, params=None):
         try:
             service_endpoint = f'{self.server_url}/{self.endpoint}'
-            logger.error("service_endpoint : {}".format(service_endpoint))
-            logger.error("Rest API Payload : {}".format(payload))
+            logger.debug("service_endpoint : {}".format(service_endpoint))
+            logger.debug("Rest API Payload : {}".format(payload))
             response = requests.request(method, service_endpoint, headers=self.headers, params=params, data=payload,
                                         verify=self.verify_ssl)
-            logger.error("Rest API Response Status code : {}".format(response.status_code))
-            logger.error("Rest API Response : {}".format(response.text))
+            logger.debug("Rest API Response Status code : {}".format(response.status_code))
             if response.ok:
                 json_resp = response.json()
                 result = json_resp.get('result')
