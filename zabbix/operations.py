@@ -109,7 +109,6 @@ def parse_response(resp):
 def build_rpc_request_payload(params, payload):
     params = {k: v for k, v in params.items() if v is not None and v != ''}
     start_date = params.get('start_date')
-    # payload['']=''
     if start_date:
         payload.get('params', {}).update({'time_from': get_datime_to_timestamp(start_date)})
     end_date = params.get('end_date')
