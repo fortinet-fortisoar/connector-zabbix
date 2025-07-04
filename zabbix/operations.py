@@ -254,23 +254,33 @@ def fetch_event_by_id(api_client, event_id):
         list_events = event_resp.get('result', [])
         return list_events
     except Exception as err:
+        logger.error("error: {}".format(err))
         logger.error('Failed to retrieves event details by id')
 
 
-def fetch_alerts_by_host_ids(api_client, host_ids):
+def fetch_alerts_by_host_ids(api_client, host_ids, start_date, end_date, limit):
     try:
         payload = copy.deepcopy(ALERTS_PAYLOAD)
-        payload['params'] = payload.get('params', {}).copy()
         payload['params'].update({'hostids': host_ids})
+        if start_date:
+            payload.get('params',{}).update({'time_from': get_datime_to_timestamp(start_date)})
+        if end_date:
+            payload.get('params',{}).update({'time_till': get_datime_to_timestamp(end_date)})
+        if limit:
+            payload.get('params', {}).update({'limit': limit})
         response = api_client.make_api_call(payload=payload)
         return response.get('result', [])
     except Exception as err:
+        logger.error("error: {}".format(err))
         logger.error('Failed to retrieves alerts details by host id')
 
 
 def get_problems(config, params):
     api_client = Zabbix(config)
     fetch_alert = params.get('fetch_alert')
+    start_date = params.get('start_date')
+    end_date = params.get('end_date')
+    limit = params.get('limit')
     rpc_json_payload = copy.deepcopy(PROBLEMS_PAYLOAD)
     request_payload = build_rpc_request_payload(params, rpc_json_payload)
     problem_resp = api_client.make_api_call(payload=request_payload)
@@ -290,7 +300,7 @@ def get_problems(config, params):
                 for host in event.get('hosts', [])
                 if 'hostid' in host
             ]
-            alerts = fetch_alerts_by_host_ids(api_client, host_ids)
+            alerts = fetch_alerts_by_host_ids(api_client, host_ids, start_date, end_date, limit)
         problem['alerts'] = alerts
     problem_resp['result'] = list_problems
     return problem_resp
