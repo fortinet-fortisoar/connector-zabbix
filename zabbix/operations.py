@@ -25,7 +25,7 @@ class Zabbix(object):
         self.headers = {
             'Content-Type': 'application/json'
         }
-        #self.auth_token = None
+        self.auth_token = None
         self.endpoint = 'api_jsonrpc.php'
         self.verify_ssl = config.get('verify_ssl')
         if self.auth_type == BASIC_AUTH:
