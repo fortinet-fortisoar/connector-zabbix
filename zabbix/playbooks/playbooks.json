@@ -468,7 +468,7 @@
                   "batch_size": 100
                 },
                 "resource": {
-                  "name": "{{ vars.item.name if vars.item.name else None }}",
+                  "name": "{{vars.item.events[0].hosts[0].host}} - {{ vars.item.name if vars.item.name else None }}",
                   "type": "/api/3/picklists/574a6ee2-7265-4701-815e-cff83b053bce",
                   "state": "/api/3/picklists/a1bac09b-1441-45aa-ad1b-c88744e48e72",
                   "source": "Zabbix",
