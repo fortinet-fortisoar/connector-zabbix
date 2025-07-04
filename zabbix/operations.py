@@ -4,14 +4,13 @@ MIT License
 Copyright (c) 2025 Fortinet Inc
 Copyright end
 """
-
+import copy
 import json
-from datetime import datetime
-
 import requests
 from connectors.core.connector import get_logger, ConnectorError
-
-from .constants import EVENT_OBJECT_TYPE_MAP, EVENT_SOURCE_MAP, ERROR_MSG
+from datetime import datetime
+from .constants import (EVENT_OBJECT_TYPE_MAP, EVENT_SOURCE_MAP, ERROR_MSG, AUTH_REQUEST_BODY, CLIENT_CRED, BASIC_AUTH,
+                        ALERTS_PAYLOAD, EVENTS_PAYLOAD, PROBLEMS_PAYLOAD)
 
 logger = get_logger('zabbix')
 
@@ -21,21 +20,37 @@ class Zabbix(object):
         self.server_url = config.get('server_url', '').strip('/')
         if not self.server_url.startswith('https://') and not self.server_url.startswith('http://'):
             self.server_url = 'https://' + self.server_url
-        self.api_key = config.get('api_key')
-        self.verify_ssl = config.get('verify_ssl')
+        self.auth_type = config.get('auth_type')
+        self.auth_method = config.get('auth_method')
+        self.auth_token = config.get('auth_method')
         self.headers = {
-            'Authorization': 'Bearer {}'.format(self.api_key),
             'Content-Type': 'application/json'
         }
+        self.auth_token = None
         self.endpoint = 'api_jsonrpc.php'
+        self.verify_ssl = config.get('verify_ssl')
+        if self.auth_type == BASIC_AUTH:
+            logger.debug("Basic Auth is selected")
+            if self.auth_method == CLIENT_CRED:
+                logger.debug("Client Credential is selected")
+                self.username = config.get('username')
+                self.password = config.get('password')
+                self.auth_token = self.get_authorization_code()
+            else:
+                logger.debug("Auth Token is selected")
+                self.auth_token = config.get('auth_token')
+        else:
+            self.api_key = config.get('api_key')
+            self.headers.update({'Authorization': 'Bearer {}'.format(self.api_key)})
 
-
-    def make_api_call(self, method='post', payload=None, params=None):
+    def make_api_call(self, method='post', payload={}, params=None):
         try:
             service_endpoint = f'{self.server_url}/{self.endpoint}'
-            logger.debug("service_endpoint : {}".format(service_endpoint))
-            logger.debug("Rest API Payload : {}".format(payload))
-            response = requests.request(method, service_endpoint, headers=self.headers, params=params, data=payload,
+            if self.auth_token:
+                payload.update({'auth': self.auth_token})
+            logger.debug("service_endpoint: {}".format(service_endpoint))
+            response = requests.request(method, service_endpoint, headers=self.headers, params=params,
+                                        data=json.dumps(payload),
                                         verify=self.verify_ssl)
             logger.debug("Rest API Response Status code : {}".format(response.status_code))
             if response.ok:
@@ -48,7 +63,8 @@ class Zabbix(object):
             else:
                 logger.error(f'{ERROR_MSG.get(response.status_code)}: {response.text}')
                 raise ConnectorError({'status': 'Failure', 'status_code': str(response.status_code),
-                'response': '{}: {}'.format(self.error_msg.get(response.status_code), response.text)})
+                                      'response': '{}: {}'.format(ERROR_MSG.get(response.status_code),
+                                                                  response.text)})
         except requests.exceptions.SSLError as err:
             logger.error(err)
             raise ConnectorError('SSL certificate validation failed')
@@ -64,6 +80,16 @@ class Zabbix(object):
         except Exception as err:
             logger.error(err)
             raise ConnectorError(str(err))
+
+    def get_authorization_code(self):
+        request_payload = AUTH_REQUEST_BODY
+        request_payload.get('params', {}).update({'user': self.username, 'password': self.password})
+        resp = self.make_api_call(payload=request_payload)
+        auth_code = resp.get('result')
+        if auth_code:
+            return auth_code
+        else:
+            raise ConnectorError("Failed to generate auth code")
 
 
 def get_datime_to_timestamp(datetime_str):
@@ -91,6 +117,14 @@ def parse_to_dict(raw_text):
         else:
             pass
     return result
+
+
+def get_list_ids(resp, key):
+    list_ids = []
+    if isinstance(resp, list):
+        for record in resp:
+            if record.get(key):
+                list_ids.append(record.get(key))
 
 
 def parse_response(resp):
@@ -153,6 +187,9 @@ def build_rpc_request_payload(params, payload):
     event_object_type = params.get('event_object_type')
     if event_object_type:
         payload.get('params', {}).update({'eventobject': EVENT_OBJECT_TYPE_MAP.get(event_object_type)})
+    _object = params.get('object')
+    if _object:
+        payload.get('params', {}).update({'object': EVENT_OBJECT_TYPE_MAP.get(_object)})
     event_source = params.get('event_source')
     if event_source:
         payload.get('params', {}).update({'eventsource': EVENT_SOURCE_MAP.get(event_source)})
@@ -188,15 +225,12 @@ def build_rpc_request_payload(params, payload):
     additional_fields = params.get('additional_fields', {})
     if additional_fields:
         payload.get('params', {}).update(additional_fields)
-    payload = json.dumps(payload)
     return payload
 
 
 def get_alerts(config, params):
     api_client = Zabbix(config)
-    rpc_json_payload = {
-        "jsonrpc": "2.0", "method": "alert.get", "params": {}, "id": 1
-    }
+    rpc_json_payload = copy.deepcopy(ALERTS_PAYLOAD)
     request_payload = build_rpc_request_payload(params, rpc_json_payload)
     resp = api_client.make_api_call(payload=request_payload)
     return parse_response(resp)
@@ -204,32 +238,72 @@ def get_alerts(config, params):
 
 def get_events(config, params):
     api_client = Zabbix(config)
-    rpc_json_payload = {"jsonrpc": "2.0", "method": "event.get", "params": {}, "id": 1
-                        }
+    rpc_json_payload = copy.deepcopy(EVENTS_PAYLOAD)
     request_payload = build_rpc_request_payload(params, rpc_json_payload)
     return api_client.make_api_call(payload=request_payload)
+
+
+def fetch_event_by_id(api_client, event_id):
+    try:
+        event_payload = copy.deepcopy(EVENTS_PAYLOAD)
+        event_payload.get('params', {}).update({"eventids": event_id, "selectHosts": ["hostid", "host"]})
+        event_resp = api_client.make_api_call(payload=event_payload)
+        list_events = event_resp.get('result', [])
+        return list_events
+    except Exception as err:
+        logger.error('Failed to retrieves event details by id')
+
+
+def fetch_alerts_by_host_ids(api_client, host_ids):
+    try:
+        payload = copy.deepcopy(ALERTS_PAYLOAD)
+        payload['params'] = payload.get('params', {}).copy()
+        payload['params'].update({'hostids': host_ids})
+        response = api_client.make_api_call(payload=payload)
+        return response.get('result', [])
+    except Exception as err:
+        logger.error('Failed to retrieves alerts details by host id')
 
 
 def get_problems(config, params):
     api_client = Zabbix(config)
-    rpc_json_payload = {"jsonrpc": "2.0", "method": "problem.get", "params": {}, "id": 1
-                        }
+    fetch_alert = params.get('fetch_alert')
+    rpc_json_payload = copy.deepcopy(PROBLEMS_PAYLOAD)
     request_payload = build_rpc_request_payload(params, rpc_json_payload)
-    return api_client.make_api_call(payload=request_payload)
+    problem_resp = api_client.make_api_call(payload=request_payload)
+    list_problems = problem_resp.get('result', [])
+    for problem in list_problems:
+        events = []
+        event_id = problem.get('eventid')
+        if event_id:
+            events = fetch_event_by_id(api_client, event_id)
+        problem['events'] = events
+        alerts = []
+        # Extract all host_ids from events
+        if fetch_alert:
+            host_ids = [
+                host.get('hostid')
+                for event in events
+                for host in event.get('hosts', [])
+                if 'hostid' in host
+            ]
+            alerts = fetch_alerts_by_host_ids(api_client, host_ids)
+        problem['alerts'] = alerts
+    problem_resp['result'] = list_problems
+    return problem_resp
 
 
 def execute_generic_rest_api_call(config, params):
     api_client = Zabbix(config)
     payload = params.get('request_body')
-    return api_client.make_api_call(payload=json.dumps(payload))
+    return api_client.make_api_call(payload=payload)
 
 
 def _check_health(config):
     api_client = Zabbix(config)
-    rpc_json_payload = {
-        "jsonrpc": "2.0", "method": "alert.get", "params": {"limit": 1}, "id": 1
-    }
-    return api_client.make_api_call(payload=json.dumps(rpc_json_payload))
+    rpc_json_payload = copy.deepcopy(PROBLEMS_PAYLOAD)
+    rpc_json_payload.get('params', {}).update({"limit": "1"})
+    return api_client.make_api_call(payload=rpc_json_payload)
 
 
 operations = {

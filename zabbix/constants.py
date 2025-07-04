@@ -32,3 +32,10 @@ EVENT_SOURCE_MAP = {
     "Internal Event": 3,
     "Event Created on Service Status Update": 4
 }
+ALERTS_PAYLOAD = {"jsonrpc": "2.0", "method": "alert.get", "params": {}, "id": 1}
+EVENTS_PAYLOAD={"jsonrpc": "2.0", "method": "event.get", "params": {}, "id": 1}
+PROBLEMS_PAYLOAD={"jsonrpc": "2.0", "method": "problem.get", "params": {}, "id": 1
+                        }
+BASIC_AUTH = 'Basic Auth'
+CLIENT_CRED = 'Client Credentials'
+AUTH_REQUEST_BODY = {"jsonrpc": "2.0", "method": "user.login", "params": {}, "id": 1}

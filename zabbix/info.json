@@ -27,14 +27,86 @@
         "editable": true
       },
       {
-        "title": "API Key",
-        "name": "api_key",
-        "type": "password",
-        "description": "Provide the API key of the zabbix server used to authenticate and and perform automated operations.",
-        "tooltip": "Provide the API key of the zabbix server used to authenticate and and perform automated operations.",
+        "title": "Authentication Type",
+        "name": "auth_type",
+        "type": "select",
+        "description": "Select the authentication mechanism supported by the Zabbix Server REST API. Note that Basic Authentication is only supported in versions earlier than 7.0, while API Key authentication is supported in version 7.2 and later.",
+        "tooltip": "Select the authentication mechanism supported by the Zabbix Server REST API. Note that Basic Authentication is only supported in versions earlier than 7.0, while API Key authentication is supported in version 7.2 and later.",
+        "required": true,
         "visible": true,
         "editable": true,
-        "required": true
+        "options": [
+          "Basic Auth",
+          "API Key"
+        ],
+        "value": "Basic Auth",
+        "onchange": {
+          "Basic Auth": [
+            {
+              "title": "Authentication Method",
+              "name": "auth_method",
+              "type": "select",
+              "description": "Select the authentication method to access the Zabbix REST API endpoints. The user can choose either Client Credentials or an Auth Token",
+              "tooltip": "Select the authentication method to access the Zabbix REST API endpoints. The user can choose either Client Credentials or an Auth Token",
+              "visible": true,
+              "editable": true,
+              "required": true,
+              "options": [
+                "Client Credentials",
+                "Auth Token"
+              ],
+              "onchange": {
+                "Client Credentials": [
+                  {
+                    "title": "Username",
+                    "name": "username",
+                    "type": "text",
+                    "description": "Username of the Zabbix server to which you will connect and perform automated operations.",
+                    "tooltip": "Username of the Zabbix server to which you will connect and perform automated operations.",
+                    "visible": true,
+                    "editable": true,
+                    "required": true
+                  },
+                  {
+                    "title": "Password",
+                    "name": "password",
+                    "type": "password",
+                    "description": "Password of the Zabbix server to which you will connect and perform automated operations.",
+                    "tooltip": "Password of the Zabbix server to which you will connect and perform automated operations.",
+                    "visible": true,
+                    "editable": true,
+                    "required": true
+                  }
+                ],
+                "Auth Token": [
+                  {
+                    "title": "Auth Token",
+                    "name": "auth_token",
+                    "type": "password",
+                    "description": "Specify the authentication token of the Zabbix rest api server to which you will connect and perform automated operations.",
+                    "tooltip": "Specify the authentication token of the Zabbix rest api server to which you will connect and perform automated operations.",
+                    "visible": true,
+                    "editable": true,
+                    "required": true
+                  }
+                ]
+              },
+              "value": "Auth Token"
+            }
+          ],
+          "API Key": [
+            {
+              "title": "API Key",
+              "name": "api_key",
+              "type": "password",
+              "description": "Provide the API key of the zabbix server used to authenticate and perform automated operations.",
+              "tooltip": "Provide the API key of the zabbix server used to authenticate and perform automated operations.",
+              "visible": true,
+              "editable": true,
+              "required": true
+            }
+          ]
+        }
       },
       {
         "title": "Verify SSL",
@@ -632,6 +704,16 @@
           "editable": true
         },
         {
+          "title": "Fetch Related Alerts",
+          "name": "fetch_alert",
+          "type": "checkbox",
+          "description": "Selecting this option to retrieve problem-related alerts from the Zabbix server.",
+          "tooltip": "Selecting this option to retrieve problem-related alerts from the Zabbix server.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
           "title": "Search Pattern",
           "name": "search",
           "type": "json",
@@ -692,18 +774,8 @@
           "editable": true
         },
         {
-          "title": "Application IDs",
-          "name": "application_ids",
-          "type": "text",
-          "description": "Provide a CSV list of application IDs to return only problems created by objects that belong to the given applications. Applies only if object is trigger or item.",
-          "tooltip": "Provide a CSV list of application IDs to return only problems created by objects that belong to the given applications. Applies only if object is trigger or item.",
-          "required": false,
-          "visible": true,
-          "editable": true
-        },
-        {
           "title": "Event Object Type",
-          "name": "event_object_type",
+          "name": "object",
           "type": "select",
           "description": "Specifying this parameter returns alerts generated by events related to objects of the given type.",
           "tooltip": "Specifying this parameter returns alerts generated by events related to objects of the given type.",
@@ -838,7 +910,7 @@
       "operation": "execute_generic_rest_api_call",
       "title": "Execute Generic JSON RPC Request",
       "annotation": "execute_generic_rest_api_call",
-      "description": "Execute any Grafana REST API using the specified API method, endpoint, and payload as input parameters and retrieves results.",
+      "description": "Execute any Zabbix JSON RPC call based on the provided request body parameters.",
       "category": "investigation",
       "handler_method": true,
       "visible": true,
