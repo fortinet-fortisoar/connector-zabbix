@@ -22,11 +22,10 @@ class Zabbix(object):
             self.server_url = 'https://' + self.server_url
         self.auth_type = config.get('auth_type')
         self.auth_method = config.get('auth_method')
-        self.auth_token = config.get('auth_method')
         self.headers = {
             'Content-Type': 'application/json'
         }
-        self.auth_token = None
+        #self.auth_token = None
         self.endpoint = 'api_jsonrpc.php'
         self.verify_ssl = config.get('verify_ssl')
         if self.auth_type == BASIC_AUTH:
