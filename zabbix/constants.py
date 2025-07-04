@@ -36,6 +36,7 @@ ALERTS_PAYLOAD = {"jsonrpc": "2.0", "method": "alert.get", "params": {}, "id": 1
 EVENTS_PAYLOAD={"jsonrpc": "2.0", "method": "event.get", "params": {}, "id": 1}
 PROBLEMS_PAYLOAD={"jsonrpc": "2.0", "method": "problem.get", "params": {}, "id": 1
                         }
+DEFAULT_RESPONSE = {"status":"success","message":"No record found for this RPC request"}
 BASIC_AUTH = 'Basic Auth'
 CLIENT_CRED = 'Client Credentials'
 AUTH_REQUEST_BODY = {"jsonrpc": "2.0", "method": "user.login", "params": {}, "id": 1}

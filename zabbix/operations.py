@@ -10,7 +10,7 @@ import requests
 from connectors.core.connector import get_logger, ConnectorError
 from datetime import datetime
 from .constants import (EVENT_OBJECT_TYPE_MAP, EVENT_SOURCE_MAP, ERROR_MSG, AUTH_REQUEST_BODY, CLIENT_CRED, BASIC_AUTH,
-                        ALERTS_PAYLOAD, EVENTS_PAYLOAD, PROBLEMS_PAYLOAD)
+                        ALERTS_PAYLOAD, EVENTS_PAYLOAD, PROBLEMS_PAYLOAD, DEFAULT_RESPONSE)
 
 logger = get_logger('zabbix')
 
@@ -53,12 +53,25 @@ class Zabbix(object):
                                         verify=self.verify_ssl)
             logger.debug("Rest API Response Status code : {}".format(response.status_code))
             if response.ok:
-                json_resp = response.json()
-                result = json_resp.get('result')
-                if result == [] or result:
-                    return json_resp
+                content_type = response.headers.get('Content-Type', '')
+                if 'application/json' in content_type:
+                    if response.text.strip():  # Ensure response body is not empty
+                        try:
+                            json_resp = response.json()
+                            result = json_resp.get('result')
+                            if result == [] or result:
+                                return json_resp
+                            else:
+                                logger.warning("Empty or unexpected result in JSON: {}".format(json_resp))
+                                return json_resp  # or return a fallback, like {}
+                        except ValueError as e:
+                            logger.warning("Invalid JSON response: {}. Returning raw text.".format(e))
+                            return response.text
+                    else:
+                        logger.warning("Empty JSON response . Returning raw text.")
+                        return DEFAULT_RESPONSE
                 else:
-                    raise ConnectorError(json_resp)
+                    return {"status": "success", "response": response.text}
             else:
                 logger.error(f'{ERROR_MSG.get(response.status_code)}: {response.text}')
                 raise ConnectorError({'status': 'Failure', 'status_code': str(response.status_code),
