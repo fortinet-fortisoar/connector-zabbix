@@ -119,14 +119,6 @@ def parse_to_dict(raw_text):
     return result
 
 
-def get_list_ids(resp, key):
-    list_ids = []
-    if isinstance(resp, list):
-        for record in resp:
-            if record.get(key):
-                list_ids.append(record.get(key))
-
-
 def parse_response(resp):
     try:
         result = resp.get('result')
