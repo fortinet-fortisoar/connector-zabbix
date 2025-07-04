@@ -62,8 +62,7 @@ class Zabbix(object):
                             if result == [] or result:
                                 return json_resp
                             else:
-                                logger.warning("Empty or unexpected result in JSON: {}".format(json_resp))
-                                return json_resp  # or return a fallback, like {}
+                                raise ConnectorError(json_resp)
                         except ValueError as e:
                             logger.warning("Invalid JSON response: {}. Returning raw text.".format(e))
                             return response.text
