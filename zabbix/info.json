@@ -714,14 +714,22 @@
           "editable": true
         },
         {
-          "title": "Search Pattern",
-          "name": "search",
-          "type": "json",
-          "description": "Return results that match the given pattern (case-insensitive). Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search.",
-          "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search.",
+          "title": "Severities",
+          "name": "severities",
+          "type": "multiselect",
+          "description": "Return only problems with given event severities. Applies only if object is trigger.",
+          "tooltip": "Return only problems with given event severities. Applies only if object is trigger.",
           "required": false,
           "visible": true,
-          "editable": true
+          "editable": true,
+          "options": [
+            "Not classified",
+            "Information",
+            "Warning",
+            "Average",
+            "High",
+            "Disaster"
+          ]
         },
         {
           "title": "Filter",
@@ -729,6 +737,16 @@
           "type": "json",
           "description": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are either a single value or an array of values to match against.",
           "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are either a single value or an array of values to match against.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Search Pattern",
+          "name": "search",
+          "type": "json",
+          "description": "Return results that match the given pattern (case-insensitive). Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search.",
+          "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search.",
           "required": false,
           "visible": true,
           "editable": true
@@ -822,16 +840,6 @@
           "type": "checkbox",
           "description": "If set to true - return only suppressed problems; false - return problems in the normal state.",
           "tooltip": "If set to true - return only suppressed problems; false - return problems in the normal state.",
-          "required": false,
-          "visible": true,
-          "editable": true
-        },
-        {
-          "title": "Severities",
-          "name": "severities",
-          "type": "text",
-          "description": "Return only problems with given event severities. Applies only if object is trigger.",
-          "tooltip": "Return only problems with given event severities. Applies only if object is trigger.",
           "required": false,
           "visible": true,
           "editable": true
