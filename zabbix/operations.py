@@ -10,7 +10,7 @@ import requests
 from connectors.core.connector import get_logger, ConnectorError
 from datetime import datetime
 from .constants import (EVENT_OBJECT_TYPE_MAP, EVENT_SOURCE_MAP, ERROR_MSG, AUTH_REQUEST_BODY, CLIENT_CRED, BASIC_AUTH,
-                        ALERTS_PAYLOAD, EVENTS_PAYLOAD, PROBLEMS_PAYLOAD, DEFAULT_RESPONSE)
+                        ALERTS_PAYLOAD, EVENTS_PAYLOAD, PROBLEMS_PAYLOAD, DEFAULT_RESPONSE, SEVERITY_MAP)
 
 logger = get_logger('zabbix')
 
@@ -216,6 +216,7 @@ def build_rpc_request_payload(params, payload):
         payload.get('params', {}).update({'suppressed': suppressed})
     severities = params.get('severities')
     if severities:
+        severities = [SEVERITY_MAP.get(severity) for severity in severities]
         payload.get('params', {}).update({'severities': severities})
     event_id_from = params.get('event_id_from')
     if event_id_from:
