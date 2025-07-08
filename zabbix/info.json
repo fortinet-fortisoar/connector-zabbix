@@ -4,7 +4,7 @@
   "label": "Zabbix",
   "description": "Zabbix is an open-source enterprise-level monitoring platform that provides real-time visibility into the performance and availability of IT infrastructure — including servers, networks, applications, services, and cloud environments.",
   "publisher": "Fortinet",
-  "cs_approved": true,
+  "cs_approved": false,
   "cs_compatible": true,
   "icon_small_name": "small.png",
   "icon_large_name": "large.png",
@@ -27,14 +27,86 @@
         "editable": true
       },
       {
-        "title": "API Key",
-        "name": "api_key",
-        "type": "password",
-        "description": "Provide the API key of the zabbix server used to authenticate and and perform automated operations.",
-        "tooltip": "Provide the API key of the zabbix server used to authenticate and and perform automated operations.",
+        "title": "Authentication Type",
+        "name": "auth_type",
+        "type": "select",
+        "description": "Select the authentication mechanism supported by the Zabbix Server REST API. Note that Basic Authentication is only supported in versions earlier than 7.0, while API Key authentication is supported in version 7.2 and later.",
+        "tooltip": "Select the authentication mechanism supported by the Zabbix Server REST API. Note that Basic Authentication is only supported in versions earlier than 7.0, while API Key authentication is supported in version 7.2 and later.",
+        "required": true,
         "visible": true,
         "editable": true,
-        "required": true
+        "options": [
+          "Basic Auth",
+          "API Key"
+        ],
+        "value": "Basic Auth",
+        "onchange": {
+          "Basic Auth": [
+            {
+              "title": "Authentication Method",
+              "name": "auth_method",
+              "type": "select",
+              "description": "Select the authentication method to access the Zabbix REST API endpoints. The user can choose either Client Credentials or an Auth Token",
+              "tooltip": "Select the authentication method to access the Zabbix REST API endpoints. The user can choose either Client Credentials or an Auth Token",
+              "visible": true,
+              "editable": true,
+              "required": true,
+              "options": [
+                "Client Credentials",
+                "Auth Token"
+              ],
+              "onchange": {
+                "Client Credentials": [
+                  {
+                    "title": "Username",
+                    "name": "username",
+                    "type": "text",
+                    "description": "Username of the Zabbix server to which you will connect and perform automated operations.",
+                    "tooltip": "Username of the Zabbix server to which you will connect and perform automated operations.",
+                    "visible": true,
+                    "editable": true,
+                    "required": true
+                  },
+                  {
+                    "title": "Password",
+                    "name": "password",
+                    "type": "password",
+                    "description": "Password of the Zabbix server to which you will connect and perform automated operations.",
+                    "tooltip": "Password of the Zabbix server to which you will connect and perform automated operations.",
+                    "visible": true,
+                    "editable": true,
+                    "required": true
+                  }
+                ],
+                "Auth Token": [
+                  {
+                    "title": "Auth Token",
+                    "name": "auth_token",
+                    "type": "password",
+                    "description": "Specify the authentication token of the Zabbix rest api server to which you will connect and perform automated operations.",
+                    "tooltip": "Specify the authentication token of the Zabbix rest api server to which you will connect and perform automated operations.",
+                    "visible": true,
+                    "editable": true,
+                    "required": true
+                  }
+                ]
+              },
+              "value": "Auth Token"
+            }
+          ],
+          "API Key": [
+            {
+              "title": "API Key",
+              "name": "api_key",
+              "type": "password",
+              "description": "Provide the API key of the zabbix server used to authenticate and perform automated operations.",
+              "tooltip": "Provide the API key of the zabbix server used to authenticate and perform automated operations.",
+              "visible": true,
+              "editable": true,
+              "required": true
+            }
+          ]
+        }
       },
       {
         "title": "Verify SSL",
@@ -632,14 +704,32 @@
           "editable": true
         },
         {
-          "title": "Search Pattern",
-          "name": "search",
-          "type": "json",
-          "description": "Return results that match the given pattern (case-insensitive). Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search.",
-          "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search.",
+          "title": "Fetch Related Alerts",
+          "name": "fetch_alert",
+          "type": "checkbox",
+          "description": "Selecting this option to retrieve problem-related alerts from the Zabbix server.",
+          "tooltip": "Selecting this option to retrieve problem-related alerts from the Zabbix server.",
           "required": false,
           "visible": true,
           "editable": true
+        },
+        {
+          "title": "Severities",
+          "name": "severities",
+          "type": "multiselect",
+          "description": "Return only problems with given event severities. Applies only if object is trigger.",
+          "tooltip": "Return only problems with given event severities. Applies only if object is trigger.",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "options": [
+            "Not classified",
+            "Information",
+            "Warning",
+            "Average",
+            "High",
+            "Disaster"
+          ]
         },
         {
           "title": "Filter",
@@ -647,6 +737,16 @@
           "type": "json",
           "description": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are either a single value or an array of values to match against.",
           "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are either a single value or an array of values to match against.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Search Pattern",
+          "name": "search",
+          "type": "json",
+          "description": "Return results that match the given pattern (case-insensitive). Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search.",
+          "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search.",
           "required": false,
           "visible": true,
           "editable": true
@@ -692,18 +792,8 @@
           "editable": true
         },
         {
-          "title": "Application IDs",
-          "name": "application_ids",
-          "type": "text",
-          "description": "Provide a CSV list of application IDs to return only problems created by objects that belong to the given applications. Applies only if object is trigger or item.",
-          "tooltip": "Provide a CSV list of application IDs to return only problems created by objects that belong to the given applications. Applies only if object is trigger or item.",
-          "required": false,
-          "visible": true,
-          "editable": true
-        },
-        {
           "title": "Event Object Type",
-          "name": "event_object_type",
+          "name": "object",
           "type": "select",
           "description": "Specifying this parameter returns alerts generated by events related to objects of the given type.",
           "tooltip": "Specifying this parameter returns alerts generated by events related to objects of the given type.",
@@ -750,16 +840,6 @@
           "type": "checkbox",
           "description": "If set to true - return only suppressed problems; false - return problems in the normal state.",
           "tooltip": "If set to true - return only suppressed problems; false - return problems in the normal state.",
-          "required": false,
-          "visible": true,
-          "editable": true
-        },
-        {
-          "title": "Severities",
-          "name": "severities",
-          "type": "text",
-          "description": "Return only problems with given event severities. Applies only if object is trigger.",
-          "tooltip": "Return only problems with given event severities. Applies only if object is trigger.",
           "required": false,
           "visible": true,
           "editable": true
@@ -838,7 +918,7 @@
       "operation": "execute_generic_rest_api_call",
       "title": "Execute Generic JSON RPC Request",
       "annotation": "execute_generic_rest_api_call",
-      "description": "Execute any Grafana REST API using the specified API method, endpoint, and payload as input parameters and retrieves results.",
+      "description": "Execute any Zabbix JSON RPC call based on the provided request body parameters.",
       "category": "investigation",
       "handler_method": true,
       "visible": true,
