@@ -383,7 +383,7 @@
       "category": "investigation",
       "description": "Retrieves event data from the Zabbix server based on specified filters such as event type, severity, source, and time range.",
       "output_schema": {
-        "jsonrpc": "2.0",
+        "jsonrpc": "",
         "result": [
           {
             "eventid": "",
@@ -663,25 +663,78 @@
       "annotation": "get_problems",
       "category": "investigation",
       "description": "Retrieves active problem records from the Zabbix server, representing currently unresolved issues.",
-      "output_schema": [
-        {
-          "id": "",
-          "uid": "",
-          "orgId": "",
-          "name": "",
-          "type": "",
-          "typeName": "",
-          "typeLogoUrl": "",
-          "access": "",
-          "url": "",
-          "user": "",
-          "database": "",
-          "basicAuth": "",
-          "isDefault": "",
-          "jsonData": {},
-          "readOnly": ""
-        }
-      ],
+      "output_schema": {
+        "id": "",
+        "result": [
+          {
+            "ns": "",
+            "name": "",
+            "r_ns": "",
+            "urls": [],
+            "clock": "",
+            "alerts": [
+              {
+                "clock": "",
+                "error": "",
+                "sendto": "",
+                "status": "",
+                "userid": "",
+                "alertid": "",
+                "eventid": "",
+                "message": "",
+                "retries": "",
+                "subject": "",
+                "actionid": "",
+                "esc_step": "",
+                "alerttype": "",
+                "p_eventid": "",
+                "mediatypeid": "",
+                "acknowledgeid": ""
+              }
+            ],
+            "events": [
+              {
+                "ns": "",
+                "name": "",
+                "urls": [],
+                "clock": "",
+                "hosts": [
+                  {
+                    "host": "",
+                    "hostid": ""
+                  }
+                ],
+                "value": "",
+                "object": "",
+                "opdata": "",
+                "source": "",
+                "userid": "",
+                "eventid": "",
+                "objectid": "",
+                "severity": "",
+                "c_eventid": "",
+                "r_eventid": "",
+                "suppressed": "",
+                "acknowledged": "",
+                "correlationid": ""
+              }
+            ],
+            "object": "",
+            "opdata": "",
+            "source": "",
+            "userid": "",
+            "eventid": "",
+            "r_clock": "",
+            "objectid": "",
+            "severity": "",
+            "r_eventid": "",
+            "suppressed": "",
+            "acknowledged": "",
+            "correlationid": ""
+          }
+        ],
+        "jsonrpc": ""
+      },
       "parameters": [
         {
           "title": "Start Date",
