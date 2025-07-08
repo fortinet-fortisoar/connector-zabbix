@@ -4,7 +4,7 @@
   "label": "Zabbix",
   "description": "Zabbix is an open-source enterprise-level monitoring platform that provides real-time visibility into the performance and availability of IT infrastructure — including servers, networks, applications, services, and cloud environments.",
   "publisher": "Fortinet",
-  "cs_approved": true,
+  "cs_approved": false,
   "cs_compatible": true,
   "icon_small_name": "small.png",
   "icon_large_name": "large.png",
