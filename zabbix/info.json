@@ -174,48 +174,6 @@
           "editable": true
         },
         {
-          "title": "Search Pattern",
-          "name": "search",
-          "type": "json",
-          "description": "Return results that match the given pattern (case-insensitive). Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search. {\"subject\": \"*CPU*\",\"message\": \"*high*\"}",
-          "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search. ex. {\"subject\": \"*CPU*\",\"message\": \"*high*\"}",
-          "required": false,
-          "visible": true,
-          "editable": true,
-          "placeholder": "{\"subject\": \"*CPU*\",\"message\": \"*high*\"}"
-        },
-        {
-          "title": "Search By Any",
-          "name": "search_any",
-          "type": "checkbox",
-          "description": "If set to true, return results that match any of the criteria given in the filter or search parameter instead of all of them. Default: false",
-          "tooltip": "If set to true, return results that match any of the criteria given in the filter or search parameter instead of all of them. Default: false",
-          "required": false,
-          "visible": true,
-          "editable": true
-        },
-        {
-          "title": "Search Wildcards Enabled",
-          "name": "search_wildcards_enabled",
-          "type": "checkbox",
-          "description": "If set to true, enables the use of \"*\" as a wildcard character in the search parameter.\n",
-          "tooltip": "If set to true, enables the use of \"*\" as a wildcard character in the search parameter.\n",
-          "required": false,
-          "visible": true,
-          "editable": true
-        },
-        {
-          "title": "Filter",
-          "name": "filter",
-          "type": "json",
-          "description": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are either a single value or an array of values to match against. ex. {\"status\": 0 }",
-          "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are either a single value or an array of values to match against. ex. {\"status\": 0 }",
-          "required": false,
-          "visible": true,
-          "editable": true,
-          "placeholder": "{\"status\": 0 }"
-        },
-        {
           "title": "Alert IDs",
           "name": "alert_ids",
           "type": "text",
@@ -364,6 +322,48 @@
           "editable": true
         },
         {
+          "title": "Search Pattern",
+          "name": "search",
+          "type": "json",
+          "description": "Return results that match the given pattern (case-insensitive). Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search. {\"subject\": \"*CPU*\",\"message\": \"*high*\"}",
+          "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search. ex. {\"subject\": \"*CPU*\",\"message\": \"*high*\"}",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "placeholder": "{\"subject\": \"*CPU*\",\"message\": \"*high*\"}"
+        },
+        {
+          "title": "Search By Any",
+          "name": "search_any",
+          "type": "checkbox",
+          "description": "If set to true, return results that match any of the criteria given in the filter or search parameter instead of all of them. Default: false",
+          "tooltip": "If set to true, return results that match any of the criteria given in the filter or search parameter instead of all of them. Default: false",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Search Wildcards Enabled",
+          "name": "search_wildcards_enabled",
+          "type": "checkbox",
+          "description": "If set to true, enables the use of \"*\" as a wildcard character in the search parameter.\n",
+          "tooltip": "If set to true, enables the use of \"*\" as a wildcard character in the search parameter.\n",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Filter",
+          "name": "filter",
+          "type": "json",
+          "description": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are either a single value or an array of values to match against. ex. {\"status\": 0 }",
+          "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are either a single value or an array of values to match against. ex. {\"status\": 0 }",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "placeholder": "{\"status\": 0 }"
+        },
+        {
           "title": "Additional Fields",
           "name": "additional_fields",
           "type": "json",
@@ -454,26 +454,6 @@
           "type": "datetime",
           "description": "Specify the end date to retrieve only events that have been created before or at the given time.",
           "tooltip": "Specify the end date to retrieve only events that have been created before or at the given time.",
-          "required": false,
-          "visible": true,
-          "editable": true
-        },
-        {
-          "title": "Search Pattern",
-          "name": "search",
-          "type": "json",
-          "description": "Return results that match the given pattern (case-insensitive). Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search. ex. {\"name\": \"CPU\"}",
-          "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search. ex. {\"name\": \"CPU\"}",
-          "required": false,
-          "visible": true,
-          "editable": true
-        },
-        {
-          "title": "Filter",
-          "name": "filter",
-          "type": "json",
-          "description": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are either a single value or an array of values to match against. {\"value\": 1,\"acknowledged\": 0}",
-          "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are either a single value or an array of values to match against. {\"value\": 1,\"acknowledged\": 0}",
           "required": false,
           "visible": true,
           "editable": true
@@ -645,6 +625,26 @@
           "editable": true
         },
         {
+          "title": "Search Pattern",
+          "name": "search",
+          "type": "json",
+          "description": "Return results that match the given pattern (case-insensitive). Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search. ex. {\"name\": \"CPU\"}",
+          "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search. ex. {\"name\": \"CPU\"}",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Filter",
+          "name": "filter",
+          "type": "json",
+          "description": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are either a single value or an array of values to match against. {\"value\": 1,\"acknowledged\": 0}",
+          "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are either a single value or an array of values to match against. {\"value\": 1,\"acknowledged\": 0}",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
           "title": "Additional Fields",
           "name": "additional_fields",
           "type": "json",
@@ -783,26 +783,6 @@
             "High",
             "Disaster"
           ]
-        },
-        {
-          "title": "Filter",
-          "name": "filter",
-          "type": "json",
-          "description": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are either a single value or an array of values to match against.",
-          "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are either a single value or an array of values to match against.",
-          "required": false,
-          "visible": true,
-          "editable": true
-        },
-        {
-          "title": "Search Pattern",
-          "name": "search",
-          "type": "json",
-          "description": "Return results that match the given pattern (case-insensitive). Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search.",
-          "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search.",
-          "required": false,
-          "visible": true,
-          "editable": true
         },
         {
           "title": "Event IDs",
@@ -950,6 +930,26 @@
           "type": "integer",
           "description": "Limit the number of records to be returned in the action response.",
           "tooltip": "Limit the number of records to be returned in the action response.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Filter",
+          "name": "filter",
+          "type": "json",
+          "description": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are either a single value or an array of values to match against.",
+          "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are either a single value or an array of values to match against.",
+          "required": false,
+          "visible": true,
+          "editable": true
+        },
+        {
+          "title": "Search Pattern",
+          "name": "search",
+          "type": "json",
+          "description": "Return results that match the given pattern (case-insensitive). Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search.",
+          "tooltip": "Return only those results that exactly match the given filter. Provides a filter object in JSON format with key-value pairs, where the keys are property names and the values are strings to search for. If no additional options are given, this will perform a LIKE \"%…%\" search.",
           "required": false,
           "visible": true,
           "editable": true
